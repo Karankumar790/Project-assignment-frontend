@@ -9,24 +9,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ["react", "react-dom"],
+    exclude: ["scheduler"]
+  },
   build: {
     chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules")) {
-            // Keep all React ecosystem in one chunk
-            if (
-              id.includes("react") ||
-              id.includes("react-dom") ||
-              id.includes("scheduler")
-            ) {
-              return "react-vendor";
-            }
-
-            if (id.includes("react-player")) return "video-player";
-            return "vendor";
-          }
+          if (id.includes("node_modules")) return "vendor";
         },
       },
     },
