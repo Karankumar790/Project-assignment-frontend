@@ -10,14 +10,21 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 2000, 
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Split all node_modules into separate chunks
           if (id.includes("node_modules")) {
-            if (id.includes("react")) return "vendor-react";
-            if (id.includes("react-player")) return "vendor-player";
+            // Keep all React ecosystem in one chunk
+            if (
+              id.includes("react") ||
+              id.includes("react-dom") ||
+              id.includes("scheduler")
+            ) {
+              return "react-vendor";
+            }
+
+            if (id.includes("react-player")) return "video-player";
             return "vendor";
           }
         },
