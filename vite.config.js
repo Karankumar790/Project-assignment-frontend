@@ -1,6 +1,6 @@
-import path from "path"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import path from "path";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
@@ -10,27 +10,18 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000, 
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Split all node_modules into separate chunks
           if (id.includes("node_modules")) {
-            // Split react/react-dom to a separate chunk
-            if (id.includes("react")) return "react-vendor"
-            // Split video libraries separately
-            if (
-              id.includes("react-player") ||
-              id.includes("wistia") ||
-              id.includes("youtube") ||
-              id.includes("mux") ||
-              id.includes("vimeo")
-            )
-              return "video-players"
-
-            return "vendor" // generic vendor chunk
+            if (id.includes("react")) return "vendor-react";
+            if (id.includes("react-player")) return "vendor-player";
+            return "vendor";
           }
         },
       },
     },
   },
-})
+});
